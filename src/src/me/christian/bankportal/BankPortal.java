@@ -1,11 +1,13 @@
 package me.christian.bankportal;
 
+import me.christian.bankportal.utility.SQL;
 import me.christian.bankportal.utility.Timer;
 
 public class BankPortal {
 
     public static BankPortal INSTANCE = lazyAssign();
 
+    public final SQL CONNECTION = new SQL();
     private boolean running = false;
     private float frameRate = 5.0F;
     private Timer gameTimer;
@@ -22,6 +24,7 @@ public class BankPortal {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                render();
                 if (gameTimer.hasTimeElapsed(1000.0F / frameRate)) {
                     update();
                 }
@@ -37,11 +40,16 @@ public class BankPortal {
         lazyAssign(); // Allowing static instance to BankPortal class
         running = true;
 
+        CONNECTION.initializeConnection();
+
         Runtime.getRuntime().addShutdownHook(new Thread(this::exit));
     }
 
-    private void update() {
-        System.out.println("update");
+    public void render() {
+
+    }
+
+    public void update() {
     }
 
     private void exit() {
@@ -61,6 +69,10 @@ public class BankPortal {
     private void forceClose() {
         System.out.println("force");
         System.exit(-1);
+    }
+
+    public void addUsers() {
+
     }
 
     public void updateFrameRate(float frameRate) {
