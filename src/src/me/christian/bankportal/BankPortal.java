@@ -1,5 +1,6 @@
 package me.christian.bankportal;
 
+import me.christian.bankportal.logic.User;
 import me.christian.bankportal.utility.SQL;
 import me.christian.bankportal.utility.Timer;
 
@@ -40,7 +41,10 @@ public class BankPortal {
         lazyAssign(); // Allowing static instance to BankPortal class
         running = true;
 
-        CONNECTION.initializeConnection();
+        CONNECTION.showTables();
+        CONNECTION.createTable("users", "uuid TEXT, userName TEXT, email TEXT, passwordHash TEXT");
+        CONNECTION.showTables();
+        CONNECTION.addNewUserToDatabase(new User("billbob", "billyboob@gmial.com", "sucker"));
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::exit));
     }
