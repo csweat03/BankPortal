@@ -1,4 +1,4 @@
-package me.christian.bankportal.utility;
+package me.christian.bankportal.server.utility;
 
 public class Timer {
 
