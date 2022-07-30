@@ -1,6 +1,7 @@
 package me.christian.bankportal.client.socket;
 
-import me.christian.bankportal.global.GlobalReferences;
+import me.christian.bankportal.server.utility.JSON;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +35,8 @@ public class CSocket {
 
     private void _run() throws IOException {
         try {
-            clientSocket = new Socket(GlobalReferences.SOCKET_URL, GlobalReferences.CONNECTION_PORT);
+            JSONObject socket = JSON.References.Obj("socket");
+            clientSocket = new Socket(socket.getString("ip"), socket.getInt("port"));
         } catch (Exception exception) {
             terminate();
         }

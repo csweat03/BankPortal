@@ -1,0 +1,24 @@
+{
+  "general": {
+    "debug": true,
+    "frameRate": 100
+  },
+  "socket": {
+    "ip": "localhost",
+    "port": 48103
+  },
+  "mysql": {
+    "url": "jdbc:mysql://localhost:3306/bpdb",
+    "username": "javaclient",
+    "password": "j@v@Cl1ent",
+    "tables": {
+      "users": "users"
+    }
+  },
+  "formatting": {
+    "command": {
+      "left_padding": "::::: :::: ::: :: : ",
+      "right_padding": " : :: ::: :::: :::::"
+    }
+  }
+}

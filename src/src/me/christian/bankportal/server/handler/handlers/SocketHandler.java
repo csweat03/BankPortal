@@ -1,9 +1,9 @@
 package me.christian.bankportal.server.handler.handlers;
 
-import me.christian.bankportal.global.GlobalReferences;
 import me.christian.bankportal.server.BankPortal;
 import me.christian.bankportal.server.handler.Handler;
 import me.christian.bankportal.server.socket.SSocket;
+import me.christian.bankportal.server.utility.JSON;
 
 import java.net.ServerSocket;
 
@@ -16,7 +16,7 @@ public class SocketHandler extends Handler<SSocket> {
 
     public void initialize() {
         try {
-            server = new ServerSocket(GlobalReferences.CONNECTION_PORT);
+            server = new ServerSocket(JSON.References.Obj("socket").getInt("port"));
         } catch (Exception exception) {
             exception.printStackTrace();
         }

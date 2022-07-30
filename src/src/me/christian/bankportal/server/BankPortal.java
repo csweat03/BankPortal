@@ -1,14 +1,9 @@
 package me.christian.bankportal.server;
 
-import me.christian.bankportal.global.GlobalReferences;
-import me.christian.bankportal.server.utility.Timer;
+import me.christian.bankportal.server.utility.*;
 import me.christian.bankportal.server.handler.handlers.CommandHandler;
 import me.christian.bankportal.server.handler.handlers.SocketHandler;
 import me.christian.bankportal.server.socket.SSocket;
-import me.christian.bankportal.server.utility.Cryptography;
-import me.christian.bankportal.server.utility.References;
-import me.christian.bankportal.server.utility.SQL;
-import me.christian.bankportal.server.utility.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +14,11 @@ import java.util.List;
 public class BankPortal {
 
     public static BankPortal INSTANCE = lazyAssign();
-
     private final SQL SQL = new SQL();
-
     private final CommandHandler CommandHandler = new CommandHandler();
     private final SocketHandler SocketHandler = new SocketHandler();
 
     private boolean running = false;
-    private final boolean debug = true;
-    private float frameRate = 100F;
     private Timer appTime;
 
     protected final List<User> users = new ArrayList<>();
@@ -46,6 +37,7 @@ public class BankPortal {
                     throw new RuntimeException(e);
                 }
                 render();
+                var frameRate = JSON.References.Obj("general").getFloat("frameRate");
                 if (appTime.hasTimeElapsed(1000.0F / frameRate)) {
                     update();
                 }
@@ -60,7 +52,7 @@ public class BankPortal {
     /**
      * Initialize function to perform all basic App configuration.
      * Sets up a static reference to the {@link BankPortal} class.
-     * Creates MySQL default table to the defined database in {@link GlobalReferences}.
+     * Creates MySQL default table to the defined database in References.json.
      * Adds all users found in database to ArrayList defined as users.
      * Adds a runtime hook on new Thread to exit program if failure or closed.
      */
@@ -69,7 +61,7 @@ public class BankPortal {
         running = true;
 
         try {
-            SQL.updateDatabase("create table " + References.DATABASE_TABLE_USERS_NAME + " ( uuid TEXT, userName TEXT, passwordHash TEXT, firstName TEXT, lastName TEXT, birthday TEXT, phone TEXT, email TEXT );");
+            SQL.updateDatabase("create table " + JSON.References.Obj("mysql").getJSONObject("tables").get("users") + " ( uuid TEXT, userName TEXT, passwordHash TEXT, firstName TEXT, lastName TEXT, birthday TEXT, phone TEXT, email TEXT );");
             //String userName, char[] password, String firstName, String lastName, String birthday, String phone, String email
             //SQL.addNewUserToDatabase(new User("admin", "password".toCharArray(), "Admin", "Account", "01/01/2000", "123-456-7890", "admin@bankportal.com"));
             users.addAll(SQL.addUsersFromDatabase());
@@ -130,13 +122,8 @@ public class BankPortal {
         }
     }
 
-    public void updateFrameRate(float frameRate) {
-        log("updateFrameRate: %s => %s", this.frameRate, frameRate);
-        this.frameRate = frameRate;
-    }
-
     public static void log(String message, Object... parameters) {
-        if (INSTANCE.debug) System.err.println("DEBUG: " + String.format(message, parameters));
+        if (JSON.References.Obj("general").getBoolean("debug")) System.err.println("DEBUG: " + String.format(message, parameters));
     }
 
     public CommandHandler getCommandHandler() {

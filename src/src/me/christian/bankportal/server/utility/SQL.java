@@ -1,7 +1,7 @@
 package me.christian.bankportal.server.utility;
 
-import me.christian.bankportal.global.GlobalReferences;
 import me.christian.bankportal.server.BankPortal;
+import org.json.JSONObject;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,7 +13,9 @@ public class SQL {
     public List<User> addUsersFromDatabase() {
         List<User> users = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(GlobalReferences.DATABASE_URL, References.DATABASE_USERNAME, References.DATABASE_PASSWORD)) {
+        JSONObject mysql = JSON.References.Obj("mysql");
+
+        try (Connection connection = DriverManager.getConnection(mysql.getString("url"), mysql.getString("username"), mysql.getString("password"))) {
             String query = "select * from users;";
             BankPortal.log(query);
             ResultSet set = connection.createStatement().executeQuery(query);
@@ -42,7 +44,9 @@ public class SQL {
             return;
         }
 
-        try (Connection connection = DriverManager.getConnection(GlobalReferences.DATABASE_URL, References.DATABASE_USERNAME, References.DATABASE_PASSWORD)) {
+        JSONObject mysql = JSON.References.Obj("mysql");
+
+        try (Connection connection = DriverManager.getConnection(mysql.getString("url"), mysql.getString("username"), mysql.getString("password"))) {
             String query = String.format("insert into users (uuid,userName,passwordHash,firstName,lastName,birthday,phone,email) values (UUID(), '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
                     user.getUserName(), user.getPasswordHash(), user.getFirstName(), user.getLastName(), user.getBirthday(), user.getPhoneNumber(), user.getEmail());
             BankPortal.log(query);
@@ -56,7 +60,9 @@ public class SQL {
     public List<String> queryDatabase(String query) {
         List<String> resultSetContent = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(GlobalReferences.DATABASE_URL, References.DATABASE_USERNAME, References.DATABASE_PASSWORD)) {
+        JSONObject mysql = JSON.References.Obj("mysql");
+
+        try (Connection connection = DriverManager.getConnection(mysql.getString("url"), mysql.getString("username"), mysql.getString("password"))) {
             ResultSet set = connection.createStatement().executeQuery(query);
 
             while (set.next()) {
@@ -71,7 +77,9 @@ public class SQL {
     }
 
     public void updateDatabase(String query) {
-        try (Connection connection = DriverManager.getConnection(GlobalReferences.DATABASE_URL, References.DATABASE_USERNAME, References.DATABASE_PASSWORD)) {
+        JSONObject mysql = JSON.References.Obj("mysql");
+
+        try (Connection connection = DriverManager.getConnection(mysql.getString("url"), mysql.getString("username"), mysql.getString("password"))) {
             BankPortal.log(query);
             connection.createStatement().executeUpdate(query);
         } catch (SQLException e) {

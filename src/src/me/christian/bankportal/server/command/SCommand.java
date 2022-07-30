@@ -1,7 +1,8 @@
 package me.christian.bankportal.server.command;
 
-import me.christian.bankportal.global.GlobalReferences;
 import me.christian.bankportal.server.BankPortal;
+import me.christian.bankportal.server.utility.JSON;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -13,12 +14,13 @@ public class SCommand {
 
     private final String name;
 
-    private final String header, footer;
+    private final String left, right;
 
     public SCommand(String name) {
         this.name = name;
-        this.header = String.format("%s %s", name, GlobalReferences.COMMAND_PADDING_LEFT);
-        this.footer = GlobalReferences.COMMAND_PADDING_RIGHT;
+        JSONObject command = JSON.References.Obj("formatting").getJSONObject("command");
+        this.left = String.format("%s %s", name, command.getString("left_padding"));
+        this.right = command.getString("right_padding");
     }
 
     public void execute(int id, String message) {
@@ -26,7 +28,7 @@ public class SCommand {
     }
 
     public boolean isQueryValid(String query) {
-        return query.startsWith(header) && query.endsWith(footer);
+        return query.startsWith(left) && query.endsWith(right);
     }
 
     public String getName() {
@@ -34,6 +36,6 @@ public class SCommand {
     }
 
     public String[] getArguments(String query) {
-        return query.replace(header, "").replace(footer, "").split(",,,");
+        return query.replace(left, "").replace(right, "").split(",,,");
     }
 }
