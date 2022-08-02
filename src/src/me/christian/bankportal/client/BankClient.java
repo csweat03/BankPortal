@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public class BankClient {
 
-    private static final CSocket socket = new CSocket();
+    private final CSocket socket = new CSocket();
 
-    public static void main(String[] args) {
+    public void run() {
         try {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> System.err.println("Your connection has been terminated.")));
 
